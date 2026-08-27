@@ -38,6 +38,7 @@ morphology = [
 arborflow-prepare-data = "arborflow.data.prepare:main"
 arborflow-inspect-data = "arborflow.data.milestone1:main"
 arborflow-build-trajectories = "arborflow.data.trajectory_pipeline:main"
+arborflow-replay-oracle = "arborflow.data.oracle_pipeline:main"
 
 
 [tool.setuptools.packages.find]
