@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "birth-death-arborflow"
+version = "0.1.0"
+description = "Hybrid flow matching on variable-dimensional embedded neuronal trees"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Birth-Death ArborFlow contributors"}]
+dependencies = [
+  "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+]
+model = [
+  "torch>=2.2",
+  "scipy>=1.10",
+  "networkx>=3.0",
+  "pandas>=2.0",
+  "scikit-learn>=1.3",
+  "matplotlib>=3.7",
+  "seaborn>=0.13",
+  "hydra-core>=1.3",
+]
+morphology = [
+  "morphio>=3.3",
+  "neurom>=4.0",
+]
+
+[project.scripts]
+arborflow-prepare-data = "arborflow.data.prepare:main"
+arborflow-inspect-data = "arborflow.data.milestone1:main"
+arborflow-build-trajectories = "arborflow.data.trajectory_pipeline:main"
+
+
+[tool.setuptools.packages.find]
+include = ["arborflow*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

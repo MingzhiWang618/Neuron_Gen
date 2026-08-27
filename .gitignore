@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local datasets, checkpoints, and generated experiments.
+/data/
+/outputs/
+/checkpoints/
+/wandb/
+

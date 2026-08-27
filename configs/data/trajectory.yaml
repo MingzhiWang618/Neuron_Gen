@@ -1,0 +1,7 @@
+trajectories_per_neuron: 8
+strategy_probabilities:
+  uniform: 0.40
+  deep: 0.30
+  short: 0.20
+  long: 0.10
+

@@ -1,0 +1,5 @@
+max_bezier_rmse_um: 1.5
+max_bezier_error_um: 3.0
+max_primitive_length_um: 80.0
+export_sample_spacing_um: 2.0
+

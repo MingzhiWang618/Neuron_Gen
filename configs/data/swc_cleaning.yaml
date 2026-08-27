@@ -1,0 +1,9 @@
+require_3d: true
+require_single_root: true
+require_connected: true
+min_nodes: 30
+min_real_branches: 5
+max_real_branches: 1000
+coordinate_tolerance_um: 1.0e-6
+repair_zero_length_edges: true
+
