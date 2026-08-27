@@ -5,12 +5,11 @@ trees. It represents morphology as a dynamically growing tree of branch primitiv
 combining continuous geometry flow with discrete `EXTEND`, `SPLIT`, and `STOP`
 events.
 
-The repository is being implemented milestone by milestone. Milestones 1–3 now
+The repository is being implemented milestone by milestone. Milestones 1–4 now
 provide an invertible branch representation, legal randomized destruction/growth
-trajectories, and analytic oracle replay. The oracle gate is complete before any
-neural model is introduced.
+trajectories, analytic oracle replay, and a geometry flow trained with oracle events.
 
-## Current status: Milestone 3 — oracle trajectory replay
+## Current status: Milestone 4 — geometry flow with oracle events
 
 Implemented:
 
@@ -38,6 +37,12 @@ Implemented:
 - event-boundary replay with continuous parent-child attachment;
 - exact final Bézier recovery plus topology-preserving SWC export;
 - JSON, SWC, and dependency-free SVG oracle replay artifacts.
+- variable-length PyTorch batches with masks and append-only parent indices;
+- branch/type/depth/child-position/root-path embeddings;
+- shortest-path and ancestor/descendant/sibling attention biases;
+- a full-attention Tree Transformer and per-branch geometry velocity head;
+- the single flow-matching velocity objective from the task book;
+- random SO(3) rotation, gradient clipping, AMP support, checkpoints, and metrics.
 
 Topology errors are never repaired automatically. Ambiguous duplicate coordinates
 that are not a parent–child pair are reported as errors instead of being silently
@@ -45,10 +50,12 @@ merged.
 
 ## Quick start
 
-The core data layer only needs NumPy and Python 3.10+.
+The core data layer only needs NumPy and Python 3.10+. Milestone 4 training additionally
+requires the `model` extra, which installs PyTorch and the planned experiment stack.
 
 ```bash
 pip install -e .
+pip install -e '.[model]'
 python -m unittest discover -s tests -v
 python scripts/prepare_data.py input_swcs/ --output data/cleaned
 python scripts/inspect_data.py data/cleaned/swcs/example.swc \
@@ -61,6 +68,10 @@ python scripts/replay_oracle.py data/cleaned/swcs/example.swc \
   --output outputs/milestone3/example \
   --num-trajectories 8 \
   --seed 0
+python scripts/train_geometry_flow.py data/m1_excitatory/ \
+  --output outputs/milestone4/geometry_flow \
+  --max-samples 40 \
+  --epochs 40
 ```
 
 The command writes cleaned SWCs under `data/cleaned/swcs/`, one JSON audit record per
@@ -88,9 +99,9 @@ default in the CLI so small synthetic fixtures remain useful.
 2. branch decomposition, binary normalization, and Bézier primitives (Milestone 1)
 3. pruning/growth trajectories (Milestone 2 complete)
 4. oracle replay (Milestone 3 complete)
-5. geometry flow with oracle events (next)
-6. dynamic batching and Tree Transformer
-7. event model and joint sampling
+5. dynamic batching, Tree Transformer, and geometry flow (Milestone 4 complete)
+6. event model with oracle geometry (next)
+7. joint sampling
 
 The recorded real-data gate is available in
 [`docs/milestone1_acceptance.md`](docs/milestone1_acceptance.md).
@@ -98,3 +109,5 @@ The trajectory gate is recorded in
 [`docs/milestone2_acceptance.md`](docs/milestone2_acceptance.md).
 The oracle replay gate is recorded in
 [`docs/milestone3_acceptance.md`](docs/milestone3_acceptance.md).
+The geometry-flow gate is recorded in
+[`docs/milestone4_acceptance.md`](docs/milestone4_acceptance.md).

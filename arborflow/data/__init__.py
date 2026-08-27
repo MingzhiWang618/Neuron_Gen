@@ -3,6 +3,7 @@
 from arborflow.data.bezier_fitting import BezierFitConfig, fit_bezier_tree
 from arborflow.data.binary_normalization import denormalize_binary, normalize_binary
 from arborflow.data.branch_decomposition import branch_tree_to_swc_exact, decompose_swc
+from arborflow.data.normalization import GeometryNormalizer
 from arborflow.data.swc_io import SwcMorphology, SwcNode, read_swc, write_swc
 from arborflow.data.swc_validation import (
     CleaningResult,
@@ -22,6 +23,7 @@ from arborflow.data.trajectory_builder import (
 __all__ = [
     "BezierFitConfig",
     "CleaningResult",
+    "GeometryNormalizer",
     "PruningConfig",
     "SwcMorphology",
     "SwcNode",

@@ -1,0 +1,17 @@
+mode: train_validation_split
+max_samples: 40
+validation_fraction: 0.2
+epochs: 40
+batch_size: 4
+learning_rate: 0.001
+trajectories_per_neuron: 2
+samples_per_neuron: 2
+random_rotation: true
+resample_each_epoch: true
+acceptance:
+  maximum_validation_error_ratio: 0.95
+model:
+  d_model: 64
+  num_heads: 4
+  num_layers: 2
+  feedforward_dim: 128

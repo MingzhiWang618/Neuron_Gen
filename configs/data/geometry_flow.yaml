@@ -1,0 +1,6 @@
+trajectories_per_neuron: 8
+samples_per_neuron: 4
+birth_noise_sigma_um: 0.01
+event_time_jitter: 0.25
+path_buckets: 257
+resample_each_epoch: true

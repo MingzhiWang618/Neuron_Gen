@@ -1,0 +1,13 @@
+epochs: 80
+batch_size: 2
+learning_rate: 0.0003
+weight_decay: 0.0001
+gradient_clip_norm: 1.0
+gradient_accumulation_steps: 1
+random_rotation: true
+mixed_precision: true
+trajectories_per_neuron: 8
+samples_per_neuron: 4
+birth_noise_sigma_um: 0.01
+event_time_jitter: 0.25
+seed: 0
