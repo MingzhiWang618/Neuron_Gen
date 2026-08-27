@@ -8,6 +8,11 @@ trajectories_per_neuron: 2
 samples_per_neuron: 2
 random_rotation: true
 resample_each_epoch: true
+environment:
+  conda_env: BCI
+  cuda_visible_devices: 4
+  device: cuda
+  mixed_precision: true
 acceptance:
   maximum_validation_error_ratio: 0.95
 model:

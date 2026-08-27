@@ -246,6 +246,7 @@ def run(args: argparse.Namespace) -> int:
         "torch_version": torch.__version__,
         "cuda_available": torch.cuda.is_available(),
         "amp_enabled": result.amp_enabled,
+        "amp_dtype": result.amp_dtype,
         "model_parameter_count": sum(
             parameter.numel() for parameter in result.model.parameters()
         ),

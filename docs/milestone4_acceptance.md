@@ -59,15 +59,15 @@ and CPU execution.
 
 Configuration: 30 training neurons and 8 file-disjoint validation neurons, 3,509
 training primitives, random legal trajectory/time resampling every epoch, independent
-SO(3) rotation per tree, 40 epochs, the same 64-dimensional two-layer model, and CPU
-execution.
+SO(3) rotation per tree, 40 epochs, the same 64-dimensional two-layer model, and BF16
+automatic mixed-precision execution on physical GPU 4.
 
 | Check | Result |
 |---|---:|
 | Initial validation velocity loss | 10.8223 |
-| Best validation velocity loss | 3.0744 |
+| Best validation velocity loss | 3.0740 |
 | Initial validation control RMSE | 14.6292 µm |
-| Best validation control RMSE | 8.7914 µm |
+| Best validation control RMSE | 8.7905 µm |
 | Validation control error ratio | 0.6009 |
 | Maximum prediction / oracle-target scale | 0.0700 |
 | Non-finite loss/gradient/prediction | 0 |
@@ -79,10 +79,14 @@ Gradient norms are checked before clipping and every optimizer update is clipped
 derived from its current parent endpoint, so geometry integration cannot disconnect a
 child from its parent.
 
-PyTorch 2.8 was available in a Python 3.10 environment. The execution container did
-not expose a CUDA device, so the CPU path was used and AMP was disabled automatically;
-CUDA selection and AMP/gradient-scaling paths are implemented but not claimed as
-hardware-validated in this report.
+The hardware validation used the `BCI` Python 3.10 environment, PyTorch 2.8.0+cu128,
+and physical GPU 4, an NVIDIA GeForce RTX 5090 with compute capability 12.0. The
+process was launched with `CUDA_VISIBLE_DEVICES=4`, so PyTorch addressed that card as
+logical `cuda:0`. CUDA, BF16 autocast, and gradient scaling were active, and all loss,
+prediction, and gradient checks remained finite. Initial GPU probing exposed FP16
+gradient overflow at the scaler's default initial scale; the trainer now prefers BF16
+on supported CUDA devices and uses a conservative initial scale of 256. CPU and
+explicit FP32 execution remain supported.
 
 ## Go/No-Go
 

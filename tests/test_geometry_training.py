@@ -60,6 +60,8 @@ class GeometryTrainingTests(unittest.TestCase):
             ),
         )
         self.assertTrue(result.all_finite)
+        self.assertFalse(result.amp_enabled)
+        self.assertEqual(result.amp_dtype, "float32")
         self.assertLess(
             result.best_train_loss,
             float(result.initial_train["loss"]),

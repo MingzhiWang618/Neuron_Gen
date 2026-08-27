@@ -59,6 +59,17 @@ class GeometryTrainingResult:
     all_finite: bool
     device: str
     amp_enabled: bool
+    amp_dtype: str
+
+
+def _amp_dtype(device: torch.device, enabled: bool) -> torch.dtype:
+    """Prefer BF16 on supported CUDA devices for its FP32-like dynamic range."""
+
+    if not enabled:
+        return torch.float32
+    if device.type == "cuda" and torch.cuda.is_bf16_supported():
+        return torch.bfloat16
+    return torch.float16
 
 
 def _loader(
@@ -150,10 +161,15 @@ def train_geometry_flow(
         weight_decay=training_config.weight_decay,
     )
     use_amp = training_config.mixed_precision and target_device.type == "cuda"
+    amp_dtype = _amp_dtype(target_device, use_amp)
     try:
-        scaler = torch.amp.GradScaler(target_device.type, enabled=use_amp)
+        scaler = torch.amp.GradScaler(
+            target_device.type,
+            enabled=use_amp,
+            init_scale=256.0,
+        )
     except (AttributeError, TypeError):
-        scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+        scaler = torch.cuda.amp.GradScaler(enabled=use_amp, init_scale=256.0)
     initial_train = evaluate_geometry_flow(
         model, train_loader, train_dataset, target_device
     )
@@ -180,7 +196,11 @@ def train_geometry_flow(
             batch = batch.to(target_device)
             if training_config.random_rotation:
                 batch = rotate_geometry_batch(batch, generator=rotation_generator)
-            with torch.autocast(device_type=target_device.type, enabled=use_amp):
+            with torch.autocast(
+                device_type=target_device.type,
+                dtype=amp_dtype,
+                enabled=use_amp,
+            ):
                 prediction = model(batch)
                 loss = masked_velocity_mse(
                     prediction, batch.target_velocity, batch.padding_mask
@@ -266,6 +286,7 @@ def train_geometry_flow(
         all_finite=all_finite,
         device=str(target_device),
         amp_enabled=use_amp,
+        amp_dtype=str(amp_dtype).removeprefix("torch."),
     )
 
 

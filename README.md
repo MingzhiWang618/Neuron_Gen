@@ -68,11 +68,18 @@ python scripts/replay_oracle.py data/cleaned/swcs/example.swc \
   --output outputs/milestone3/example \
   --num-trajectories 8 \
   --seed 0
-python scripts/train_geometry_flow.py data/m1_excitatory/ \
+CUDA_VISIBLE_DEVICES=4 conda run -n BCI python scripts/train_geometry_flow.py \
+  data/m1_excitatory/ \
   --output outputs/milestone4/geometry_flow \
   --max-samples 40 \
-  --epochs 40
+  --epochs 40 \
+  --device cuda
 ```
+
+On this workstation, physical GPU 4 is the validated Milestone 4 device. Setting
+`CUDA_VISIBLE_DEVICES=4` maps it to logical `cuda:0` inside PyTorch. Supported CUDA
+devices use BF16 autocast; otherwise training falls back to FP16 autocast, while
+`--no-mixed-precision` selects FP32.
 
 The command writes cleaned SWCs under `data/cleaned/swcs/`, one JSON audit record per
 input under `data/cleaned/logs/`, and a dataset-level `manifest.jsonl`. Invalid files
