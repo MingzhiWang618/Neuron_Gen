@@ -64,8 +64,10 @@ class GeometryFlowModel(nn.Module):
         )
         self.velocity_head = VelocityHead(self.config.d_model)
 
-    def forward(self, batch: GeometryBatch) -> torch.Tensor:
+    def encode(self, batch: GeometryBatch) -> torch.Tensor:
         values = self.embedding(batch)
         bias = self.tree_bias(batch.shortest_path_distance, batch.relation)
-        values = self.backbone(values, batch.padding_mask, bias)
-        return self.velocity_head(values, batch.padding_mask)
+        return self.backbone(values, batch.padding_mask, bias)
+
+    def forward(self, batch: GeometryBatch) -> torch.Tensor:
+        return self.velocity_head(self.encode(batch), batch.padding_mask)

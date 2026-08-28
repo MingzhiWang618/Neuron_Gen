@@ -1,5 +1,6 @@
 """Continuous geometry paths and hybrid replay utilities."""
 
+from arborflow.flow.event_process import EventClass
 from arborflow.flow.geometry_path import (
     BranchGeometryPath,
     OracleGeometryConfig,
@@ -10,6 +11,7 @@ from arborflow.flow.oracle_replay import OracleReplay, OracleReplayReport
 
 __all__ = [
     "BranchGeometryPath",
+    "EventClass",
     "OracleGeometryConfig",
     "OracleReplay",
     "OracleReplayReport",

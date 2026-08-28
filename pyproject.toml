@@ -40,6 +40,7 @@ arborflow-inspect-data = "arborflow.data.milestone1:main"
 arborflow-build-trajectories = "arborflow.data.trajectory_pipeline:main"
 arborflow-replay-oracle = "arborflow.data.oracle_pipeline:main"
 arborflow-train-geometry = "arborflow.training.geometry_pipeline:main"
+arborflow-train-events = "arborflow.training.event_pipeline:main"
 
 
 [tool.setuptools.packages.find]

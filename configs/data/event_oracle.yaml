@@ -1,0 +1,7 @@
+trajectories_per_neuron: 4
+samples_per_neuron: 32
+event_time_jitter: 0.25
+geometry: oracle_fixed
+frontier_only: true
+wait_supervision: other_active_leaves
+resample_each_epoch: true

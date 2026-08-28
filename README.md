@@ -5,11 +5,12 @@ trees. It represents morphology as a dynamically growing tree of branch primitiv
 combining continuous geometry flow with discrete `EXTEND`, `SPLIT`, and `STOP`
 events.
 
-The repository is being implemented milestone by milestone. Milestones 1–4 now
+The repository is being implemented milestone by milestone. Milestones 1–5 now
 provide an invertible branch representation, legal randomized destruction/growth
-trajectories, analytic oracle replay, and a geometry flow trained with oracle events.
+trajectories, analytic oracle replay, geometry flow with oracle events, and a dynamic
+event model trained with oracle geometry.
 
-## Current status: Milestone 4 — geometry flow with oracle events
+## Current status: Milestone 5 — event model with oracle geometry
 
 Implemented:
 
@@ -43,6 +44,12 @@ Implemented:
 - a full-attention Tree Transformer and per-branch geometry velocity head;
 - the single flow-matching velocity objective from the task book;
 - random SO(3) rotation, gradient clipping, AMP support, checkpoints, and metrics.
+- frontier-only `WAIT`, `EXTEND`, `SPLIT`, and `STOP` supervision;
+- class-balanced event cross entropy and held-out macro-F1/confusion metrics;
+- a four-class event head on the shared dynamic Tree Transformer architecture;
+- finite dynamic topology rollout with branch, depth, and step safety limits;
+- empirical-prior calibration after weighted training and branch/depth distribution
+  checks under an oracle geometry provider.
 
 Topology errors are never repaired automatically. Ambiguous duplicate coordinates
 that are not a parent–child pair are reported as errors instead of being silently
@@ -50,8 +57,9 @@ merged.
 
 ## Quick start
 
-The core data layer only needs NumPy and Python 3.10+. Milestone 4 training additionally
-requires the `model` extra, which installs PyTorch and the planned experiment stack.
+The core data layer only needs NumPy and Python 3.10+. Milestone 4–5 training
+additionally requires the `model` extra, which installs PyTorch and the planned
+experiment stack.
 
 ```bash
 pip install -e .
@@ -74,9 +82,15 @@ CUDA_VISIBLE_DEVICES=4 conda run -n BCI python scripts/train_geometry_flow.py \
   --max-samples 40 \
   --epochs 40 \
   --device cuda
+CUDA_VISIBLE_DEVICES=4 conda run -n BCI python scripts/train_event_model.py \
+  data/m1_excitatory/ \
+  --output outputs/milestone5/event_model \
+  --max-samples 40 \
+  --epochs 40 \
+  --device cuda
 ```
 
-On this workstation, physical GPU 4 is the validated Milestone 4 device. Setting
+On this workstation, physical GPU 4 is the validated Milestone 4–5 device. Setting
 `CUDA_VISIBLE_DEVICES=4` maps it to logical `cuda:0` inside PyTorch. Supported CUDA
 devices use BF16 autocast; otherwise training falls back to FP16 autocast, while
 `--no-mixed-precision` selects FP32.
@@ -107,8 +121,8 @@ default in the CLI so small synthetic fixtures remain useful.
 3. pruning/growth trajectories (Milestone 2 complete)
 4. oracle replay (Milestone 3 complete)
 5. dynamic batching, Tree Transformer, and geometry flow (Milestone 4 complete)
-6. event model with oracle geometry (next)
-7. joint sampling
+6. event model with oracle geometry (Milestone 5 complete)
+7. joint teacher forcing and scheduled sampling (next)
 
 The recorded real-data gate is available in
 [`docs/milestone1_acceptance.md`](docs/milestone1_acceptance.md).
@@ -118,3 +132,5 @@ The oracle replay gate is recorded in
 [`docs/milestone3_acceptance.md`](docs/milestone3_acceptance.md).
 The geometry-flow gate is recorded in
 [`docs/milestone4_acceptance.md`](docs/milestone4_acceptance.md).
+The event-model gate is recorded in
+[`docs/milestone5_acceptance.md`](docs/milestone5_acceptance.md).
